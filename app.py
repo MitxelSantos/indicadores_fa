@@ -11,7 +11,7 @@ warnings.filterwarnings('ignore')
 
 # Configuración de la página
 st.set_page_config(
-    page_title="Dashboard - Plan Contingencia Fiebre Amarilla",
+    page_title="Indicadores - Plan Contingencia Fiebre Amarilla",
     page_icon="🦟",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -19,9 +19,8 @@ st.set_page_config(
 
 # Título principal (sin logo aquí)
 st.title("🦟 Plan de Contingencia para Alertas y Emergencia por Fiebre Amarilla")
-st.markdown("### 📊 **Seguimiento de Indicadores - Rendición de Cuentas**")
+st.markdown("### 📊 **Seguimiento de Indicadores**")
 st.markdown("**Secretaría de Salud del Tolima**")
-st.markdown("---")
 
 @st.cache_data
 def load_and_process_data():
@@ -300,11 +299,9 @@ def main():
         st.error("No se pudieron cargar los datos. Asegúrate de que el archivo 'indicadores.xlsx' esté en el directorio correcto.")
         return
     
-    st.success(f"✅ Datos cargados exitosamente: **{len(indicadores)} indicadores** | **Últimos 3 meses: Mar-May 2025**")
-    
     # Sidebar para filtros y logo
     with st.sidebar:
-        # Logo en el sidebar - Más pequeño
+        # Logo en el sidebar
         try:
             logo = Image.open("Logo_gobernacion.png")
             st.image(logo, width=150)
@@ -313,7 +310,7 @@ def main():
             st.markdown("🏛️ **Gobernación del Tolima**")
             st.markdown("---")
         
-        st.header("🔧 Configuración")
+        st.header("🔧 Filtros")
         
         # Filtro por línea estratégica
         lineas_unicas = list(set([get_linea_estrategica_nombre(ind['linea']) for ind in indicadores]))
@@ -336,7 +333,6 @@ def main():
         st.markdown("---")
         st.markdown("### 📋 Resumen")
         st.markdown(f"**Total indicadores:** {len(indicadores)}")
-        st.markdown(f"**Períodos:** 3 meses")
         st.markdown(f"**Líneas estratégicas:** 5")
         
         st.markdown("---")
@@ -364,7 +360,6 @@ def main():
     
     with tab1:
         st.header("📈 Progreso Temporal de Indicadores")
-        st.markdown("*Últimos 3 meses: Marzo - Abril - Mayo 2025*")
         
         if not indicadores_filtrados:
             st.warning("No hay indicadores que coincidan con los filtros seleccionados.")
@@ -465,7 +460,6 @@ def main():
     
     with tab2:
         st.header("📊 Resumen Ejecutivo")
-        st.markdown("*Últimos 3 meses: Marzo - Abril - Mayo 2025*")
         
         # Métricas generales - Layout responsive
         col1, col2, col3, col4 = st.columns(4)
@@ -566,7 +560,6 @@ def main():
     
     with tab3:
         st.header("📋 Datos Detallados")
-        st.markdown("*Últimos 3 meses: Marzo - Abril - Mayo 2025*")
         
         # Tabla completa de todos los indicadores
         tabla_completa = []
