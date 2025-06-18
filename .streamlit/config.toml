@@ -1,0 +1,40 @@
+[theme]
+# Tema optimizado para el dashboard de Fiebre Amarilla
+primaryColor = "#FF6B6B"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F0F2F6"
+textColor = "#262730"
+
+[server]
+# Configuración del servidor
+headless = true
+enableCORS = false
+enableXsrfProtection = true
+
+[browser]
+# Configuración del navegador
+gatherUsageStats = false
+showErrorDetails = true
+
+[client]
+# Configuración del cliente
+showErrorDetails = true
+toolbarMode = "minimal"
+
+[runner]
+# Configuración de ejecución
+magicEnabled = true
+installTracer = true
+fixMatplotlib = true
+
+[logger]
+# Configuración de logs
+level = "info"
+
+[mapbox]
+# Configuración de mapas (si se necesita en el futuro)
+token = ""
+
+[deprecation]
+# Manejo de deprecaciones
+showPyplotGlobalUse = false
