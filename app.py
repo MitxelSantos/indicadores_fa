@@ -7,6 +7,7 @@ import numpy as np
 from datetime import datetime
 import warnings
 from PIL import Image
+import re
 warnings.filterwarnings('ignore')
 
 # Configuración de la página
@@ -261,7 +262,7 @@ def create_progress_chart(indicador_data, periodos):
         fig.update_layout(height=350)
     
     fig.update_layout(
-        title=f"Indicador {indicador_data['numero']}: {indicador_data['nombre'][:50]}...",
+        title=f"Indicador {indicador_data['numero']}: {limpiar_texto_markdown(indicador_data['nombre'])[:50]}...",
         xaxis_title="Período",
         showlegend=False,
         template="plotly_white",
@@ -270,6 +271,26 @@ def create_progress_chart(indicador_data, periodos):
     )
     
     return fig
+
+def limpiar_texto_markdown(texto):
+    """
+    Limpia texto para evitar problemas con markdown
+    """
+    if not texto:
+        return ""
+    
+    # Reemplazar caracteres problemáticos
+    texto_limpio = str(texto)
+    texto_limpio = texto_limpio.replace('*', '')
+    texto_limpio = texto_limpio.replace('\r\n', ' ')
+    texto_limpio = texto_limpio.replace('\r', ' ')
+    texto_limpio = texto_limpio.replace('\n', ' ')
+    texto_limpio = texto_limpio.replace('\t', ' ')
+    
+    # Limpiar espacios múltiples
+    texto_limpio = re.sub(r'\s+', ' ', texto_limpio)
+    
+    return texto_limpio.strip()
 
 def get_linea_estrategica_nombre(linea_texto):
     """
@@ -301,7 +322,7 @@ def main():
     
     # Sidebar para filtros y logo
     with st.sidebar:
-        # Logo en el sidebar
+        # Logo en el sidebar - Más pequeño
         try:
             logo = Image.open("Logo_gobernacion.png")
             st.image(logo, width=150)
@@ -310,7 +331,7 @@ def main():
             st.markdown("🏛️ **Gobernación del Tolima**")
             st.markdown("---")
         
-        st.header("🔧 Filtros")
+        st.header("🔧 Configuración")
         
         # Filtro por línea estratégica
         lineas_unicas = list(set([get_linea_estrategica_nombre(ind['linea']) for ind in indicadores]))
@@ -380,8 +401,11 @@ def main():
             indicadores_linea = indicadores_por_linea[linea_nombre]
             
             for indicador in indicadores_linea:
+                # Limpiar el nombre para evitar problemas con markdown
+                nombre_limpio = limpiar_texto_markdown(indicador['nombre'])
+                
                 # Usar expanders como antes, pero mejorados
-                with st.expander(f"**{indicador['numero']}. {indicador['nombre']}**", expanded=False):
+                with st.expander(f"**{indicador['numero']}. {nombre_limpio}**", expanded=False):
                     
                     # Layout responsive con columnas
                     col1, col2 = st.columns([3, 1])
@@ -581,10 +605,10 @@ def main():
                     
                     tabla_completa.append({
                         'Indicador': ind['numero'],
-                        'Nombre': ind['nombre'],
+                        'Nombre': limpiar_texto_markdown(ind['nombre']),
                         'Línea': get_linea_estrategica_nombre(ind['linea']),
                         'Tipo': ind['tipo'],
-                        'Definición': ind['definicion'],
+                        'Definición': limpiar_texto_markdown(ind['definicion']),
                         'Período': periodo,
                         'Numerador': datos['numerador'] or 'Pendiente',
                         'Denominador': datos['denominador'] or 'N/A',
